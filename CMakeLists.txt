@@ -11,7 +11,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake")
 # pcl 1.7 causes a segfault when it is built with debug mode
 set(CMAKE_BUILD_TYPE "RELEASE")
 
-include_directories(/home/sriram/4D_RIS_ws/src/fast_apdgicp/include)
+include_directories(/c/Academic/Umich/ROB530/RadarSLAM_ws/src/fast_apdgicp/include)
+include_directories(/c/Academic/Umich/ROB530/RadarSLAM_ws/src/4D-Radar-Inertial-SLAM/src)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -100,18 +101,46 @@ include_directories(
   "~/sensor_ws/devel/include"
 )
 
+find_package(Python3 COMPONENTS Development REQUIRED)
+include_directories("/usr/include/python3.8/")
+
+# add_library(robust_dynamic_filter
+#   src/robust_dynamic_filter.cpp
+# )
+# target_link_libraries(robust_dynamic_filter
+#   ${catkin_LIBRARIES}
+#   ${PYTHON_LIBRARIES}
+# )
+# add_dependencies(robust_dynamic_filter ${PROJECT_NAME}_gencpp)
+
 # nodelets
 add_library(preprocessing_nodelet
   apps/preprocessing_nodelet.cpp
   src/radar_ego_velocity_estimator.cpp
   #src/lib/radar_body_velocity_estimator.cpp
   #src/lib/radar_body_velocity_estimator_ros.cpp
+  src/robust_dynamic_filter.cpp
+  # HDBSCAN
+  src/hdbscan/hdbscan.cpp
+  src/hdbscan/bitSet.cpp
+  src/hdbscan/cluster.cpp
+  src/hdbscan/EuclideanDistance.cpp
+  src/hdbscan/hdbscanAlgorithm.cpp
+  src/hdbscan/hdbscanConstraint.cpp
+  src/hdbscan/hdbscanParameters.cpp
+  src/hdbscan/hdbscanResult.cpp
+  src/hdbscan/hdbscanRunner.cpp
+  src/hdbscan/IDistanceCalculator.cpp
+  src/hdbscan/ManhattanDistance.cpp
+  src/hdbscan/outlierScore.cpp
+  src/hdbscan/undirectedGraph.cpp
 )
 target_link_libraries(preprocessing_nodelet
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
   ${OpenCV_LIBRARIES}
   ${Boost_LIBRARIES}
+  ${PYTHON_LIBRARIES}
 )
 add_dependencies(preprocessing_nodelet ${PROJECT_NAME}_gencpp)
 
